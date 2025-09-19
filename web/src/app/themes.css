@@ -1,0 +1,23 @@
+:root{
+  /* Brand palette */
+  --bs-primary: #0e7c7b;
+  --bs-secondary: #6c757d;
+  --bs-success: #2aa198;
+  --bs-info: #1982c4;
+  --bs-warning: #ffb703;
+  --bs-danger: #e63946;
+  --bs-light: #f8f9fa;
+  --bs-dark: #1f2937;
+
+  /* Typography */
+  --bs-body-font-size: 1rem;
+  --bs-body-color: #1f2937;
+  --bs-body-bg: #ffffff;
+
+  /* Corners/shadows */
+  --radius-xl: 1rem;
+}
+
+.btn, .card, .form-control, .dropdown-menu, .badge {
+  border-radius: var(--radius-xl) !important;
+}
