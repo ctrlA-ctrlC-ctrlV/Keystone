@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from 'next/link'
 
 export default function Home() {
   return (
@@ -11,8 +12,8 @@ export default function Home() {
               Fast, energy-efficient builds with clear pricing and professional installation.
             </p>
             <div className="d-flex gap-3">
-              <a className="btn btn-primary btn-lg" href="/contact">Get a Quote</a>
-              <a className="btn btn-outline-secondary btn-lg" href="/products">See Products</a>
+              <Link className="btn btn-primary btn-lg" href="/contact">Get a Quote</Link>
+              <Link className="btn btn-outline-secondary btn-lg" href="/products">See Products</Link>
             </div>
           </div>
           <div className="col-lg-6 mt-4 mt-lg-0">
