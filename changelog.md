@@ -20,6 +20,16 @@ Format: *Added, Changed, Fixed, Removed, Security*.
 - 
 
 ---
+## [0.2.0] - 2025-09-19
+### Added
+- Add CI/CD pipline via Vercel
+- Render from server side on Vercel
+
+### Fixed
+- Tailwind clash with Vercel
+- Code in server Render touching document
+
+---
 
 ## [0.1.0] - 2025-09-18
 ### Added

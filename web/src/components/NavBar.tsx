@@ -20,9 +20,9 @@ export default function NavBar() {
                                 Products
                             </Link>
                             <ul className="dropdown-menu dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><Link href="/garden-room" className="dropdown-item">Garden Room</Link></li>
-                                <li><Link href="/house-extension" className="dropdown-item">House Extension</Link></li>
-                                <li><Link href="/house-build" className="dropdown-item">House Build</Link></li>
+                                <li><Link href="/products/garden-room" className="dropdown-item">Garden Room</Link></li>
+                                <li><Link href="/products/house-extension" className="dropdown-item">House Extension</Link></li>
+                                <li><Link href="/products/house-build" className="dropdown-item">House Build</Link></li>
                             </ul>                                                        
                         </li>
                         <li className="nav-item"><Link href="/portfolio" className="nav-link">Portfolio</Link></li>
