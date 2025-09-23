@@ -18,8 +18,8 @@ export default function LightboxClient() {
         const modal = document.getElementById('lightboxModal');
         if(!modal) return;
 
-        modal.addEventListener('show.bs.modal', handler as any);
-        return () => modal.removeEventListener('show.bs.modal', handler as any);
+        modal.addEventListener('show.bs.modal', handler as EventListener);
+        return () => modal.removeEventListener('show.bs.modal', handler as EventListener);
     }, []);
 
     return null;

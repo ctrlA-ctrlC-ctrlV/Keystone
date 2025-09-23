@@ -22,6 +22,11 @@ Format: *Added, Changed, Fixed, Removed, Security*.
 ---
 ## [0.2.0] - 2025-09-19
 ### Added
+- supabase backend MVP
+
+---
+## [0.1.2] - 2025-09-19
+### Added
 - Add CI/CD pipline via Vercel
 - Render from server side on Vercel
 
