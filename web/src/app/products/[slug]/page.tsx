@@ -45,7 +45,8 @@ export async function generateStaticParams() {
 
 /** per-page SEO */
 export async function generateMetadata({ params }: { params: { slug: string } }) {
-  const product = getProductBySlug(params.slug);
+  const { slug } = await params;
+  const product = await getProducts(slug);
   if (!product) return { title: "Product not found" };
   return {
     title: `${product.title} — Products`,
@@ -54,7 +55,8 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 }
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-  const product = await getProducts(params.slug);
+  const { slug } = await params;
+  const product = await getProducts(slug);
   if (!product) return notFound();
 
   const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
