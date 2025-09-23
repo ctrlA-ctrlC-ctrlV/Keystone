@@ -1,12 +1,26 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getAllProducts, getProductBySlug } from "@/lib/products";
+import { getProductBySlug } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
+import LightboxClient from "./lightbox-client";
 
 export const revalidate = 60;
 
+/* --------- Types ------------ */
+type ProductImage = {
+  path: string;
+  alt: string | null;
+  sort_order: number | null;
+};
 
-
+type Product = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string | null;
+  lead_price: string | null;
+  images: ProductImage[] | null;
+};
 
 async function getProducts(slug: string) {
   const { data: product, error } = await supabase
@@ -25,8 +39,8 @@ async function getProducts(slug: string) {
 /** Static generation for each product */
 export async function generateStaticParams() {
   const {data, error } = await supabase.from("products").select("slug");
-  if (error) return [];
-  return (data ?? [].map((p:any) => ({ slug: p.slug })));
+  if (error || !data) return [];
+  return (data ?? []).map((p:{slug: string}) => ({ slug: p.slug }));
 }
 
 /** per-page SEO */
@@ -45,7 +59,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
   const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
   const publicBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucket}`;
-  const imgs = (product.images ?? []).slice().sort((a:any,b:any)=>(a.sort_order??0)-(b.sort_order??0));
+  const imgs: ProductImage[]  = 
+    (product.images ?? []).slice().sort((a,b)=>(a.sort_order??0)-(b.sort_order??0));
   const hero = imgs[0];
   const heroUrl = hero ? `${publicBase}/${hero.path}` : undefined;
 
@@ -93,14 +108,14 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
           {/* Thumbs */}
           <div className="row g-3">
-            {imgs.map((img:any, i:number)=>{
+            {imgs.map((img, i)=>{
               const url = `${publicBase}/${img.path}`;
               return (
                 <div className="col-4 col-md-3" key={i}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={url}
-                    alt="img.alt ?? product.title"
+                    alt={img.alt ?? product.title}
                     className="img-fluid rounded shadow-sm"
                     role="button"
                     data-bs-toggle="modal"
@@ -144,11 +159,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
             <div className="modal-body p-0">
               {/* The img src is dynamically set by a small script in a client component below */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img id="lightboxImage" src={heroUrl} alt={product.title} className="w-100 h-auto rounded-buttom"/>
+              <img id="lightboxImage" src={heroUrl} alt={product.title} className="w-100 h-auto rounded-bottom"/>
             </div>
           </div>
         </div>
       </div>
+      <LightboxClient />
     </>
   );
 }
