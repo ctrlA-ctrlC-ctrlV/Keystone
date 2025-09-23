@@ -3,8 +3,12 @@ import { useEffect } from "react"
 
 export default function LightboxClient() {
     useEffect(()=>{
-        const handler = (e: any) => {
-            const trigger = e.relatedTarget as HTMLElement | null;
+        // custom event type with relatedTarget
+        type BootstrapModalEvent = Event & { relatedTarget: EventTarget | null}
+
+        const handler = (e: Event) => {
+            const event = e as BootstrapModalEvent;
+            const trigger = event.relatedTarget as HTMLElement | null;
             if (!trigger) return;
             const imgEl = document.getElementById('lightboxImage') as HTMLImageElement | null;
             const newSrc = trigger.getAttribute('data-bs-image') || (trigger as HTMLImageElement).src;
