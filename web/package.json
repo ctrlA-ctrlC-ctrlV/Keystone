@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "next": "15.5.3",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "server-only": "^0.0.1",
     "typescript": "^5"
   }
 }
