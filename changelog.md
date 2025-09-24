@@ -20,6 +20,13 @@ Format: *Added, Changed, Fixed, Removed, Security*.
 - 
 
 ---
+## [0.2.12] - 2025-09-14
+### Added
+- Admin page to add/rmv data from database
+
+---
+
+---
 ## [0.2.1] - 2025-09-14
 ### Fixed
 - Backend image not loading due to case sensativity
