@@ -20,7 +20,12 @@ Format: *Added, Changed, Fixed, Removed, Security*.
 - 
 
 ---
-## [0.2.0] - 2025-09-19
+## [0.2.1] - 2025-09-14
+### Fixed
+- Backend image not loading due to case sensativity
+
+---
+## [0.2.0] - 2025-09-23
 ### Added
 - supabase backend MVP
 

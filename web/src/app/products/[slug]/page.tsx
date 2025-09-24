@@ -21,12 +21,12 @@ type Product = {
   images: ProductImage[] | null;
 };
 
-const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
+const BUCKET = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
 
 function publicUrl(path?: string | null) {
   if (!path) return undefined;
-  const clean = path.replace(/^\/+/, "").replace(/^products\/+/, "");
-  const { data } = supabase.storage.from(bucket).getPublicUrl(clean);
+  const clean = path.replace(/^\/+/, "").replace(/^Products\/+/, '');
+  const { data } = supabase.storage.from(BUCKET).getPublicUrl(clean);
   return data.publicUrl;
 }
 
@@ -41,7 +41,7 @@ async function getProducts(slug: string) {
     .single();
 
   if(error && error.code !== "PGRST116") throw error; // not found error
-  return product;
+  return product as Product | null;
 } 
 
 /** Static generation for each product */
@@ -52,7 +52,7 @@ export async function generateStaticParams() {
 }
 
 /** per-page SEO */
-export async function generateMetadata({ params }: { params: { slug: string } }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProducts(slug);
   if (!product) return { title: "Product not found" };
@@ -75,7 +75,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const heroUrl = hero ? publicUrl(hero.path) : undefined;*/
   //const heroUrl = hero ? buildImageUrl(publicBase, hero.path) : undefined;
   //const heroUrl = hero ? `${publicBase}/${hero.path}` : undefined;
-  console.log(product);
 
   const imgs: ProductImage[] = (product.images ?? [])
     .slice()
