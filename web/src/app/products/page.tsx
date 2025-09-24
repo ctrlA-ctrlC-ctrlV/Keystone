@@ -28,7 +28,7 @@ async function getProducts(): Promise<ProductRow[]> {
 export default async function ProductsPage() {
   const items = await getProducts();
   const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
-  const publicBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucket}`;
+  const publicBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}`;
 
   return (
     <>

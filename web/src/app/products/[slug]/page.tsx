@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { getProductBySlug } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
 import LightboxClient from "./lightbox-client";
 
@@ -21,6 +20,15 @@ type Product = {
   lead_price: string | null;
   images: ProductImage[] | null;
 };
+
+const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
+
+function publicUrl(path?: string | null) {
+  if (!path) return undefined;
+  const clean = path.replace(/^\/+/, "").replace(/^products\/+/, "");
+  const { data } = supabase.storage.from(bucket).getPublicUrl(clean);
+  return data.publicUrl;
+}
 
 async function getProducts(slug: string) {
   const { data: product, error } = await supabase
@@ -54,17 +62,27 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProducts(slug);
   if (!product) return notFound();
 
-  const bucket = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
-  const publicBase = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${bucket}`;
+  /*const supaUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+  const publicBase = `${supaUrl.replace(/\/+$/, "")}/storage/v1/object/public/${bucket}`;
   const imgs: ProductImage[]  = 
     (product.images ?? []).slice().sort((a,b)=>(a.sort_order??0)-(b.sort_order??0));
   const hero = imgs[0];
-  const heroUrl = hero ? `${publicBase}/${hero.path}` : undefined;
+  const heroUrl = hero ? publicUrl(hero.path) : undefined;*/
+  //const heroUrl = hero ? buildImageUrl(publicBase, hero.path) : undefined;
+  //const heroUrl = hero ? `${publicBase}/${hero.path}` : undefined;
+  console.log(product);
+
+  const imgs: ProductImage[] = (product.images ?? [])
+    .slice()
+    .sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0));
+
+  const hero = imgs[0];
+  const heroUrl = publicUrl(hero?.path);
 
   return (
     <>
@@ -83,11 +101,12 @@ export default async function ProductPage({ params }: { params: { slug: string }
         <h1 className="h2 fw-bold">{product.title}</h1>
         <p className="text-secondary">{product.summary}</p>
       </header>
-
+      
       <div className="row g-4">
         <div className="col-lg-7">
           <div className="card shadow-sm mb-4">
-            <div className="ratio ratio-16x9 bg-light rounded-top">
+            <div className="ratio ratio-16x9 bg-light rounded-top">   
+                       
               {heroUrl && (
                 //eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -111,9 +130,10 @@ export default async function ProductPage({ params }: { params: { slug: string }
           {/* Thumbs */}
           <div className="row g-3">
             {imgs.map((img, i)=>{
-              const url = `${publicBase}/${img.path}`;
+              const url = publicUrl(img.path);
+              //const url = `${publicBase}/${img.path}`;
               return (
-                <div className="col-4 col-md-3" key={i}>
+                <div className="col-4 col-md-3" key={`${img.path}-${i}`}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={url}
