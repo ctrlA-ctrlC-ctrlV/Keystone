@@ -1,4 +1,5 @@
-import { supabaseAdmin, supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
+import { supabaseBrowser } from "@/lib/supabase-browser";
 import Link from "next/link";
 import { revalidatePath } from "next/cache";
 
@@ -23,7 +24,7 @@ type ProductImage = {
 
 /* ---------- Read data for the page ---------- */
 async function getData() {
-  const { data: products, error: pErr } = await supabase
+  const { data: products, error: pErr } = await supabaseBrowser
     .from("products")
     .select("id, slug, title, summary, lead_price")
     .order("title", { ascending: true });
@@ -31,7 +32,7 @@ async function getData() {
   if (pErr) throw pErr;
 
   // get first few images per product (optional display)
-  const { data: images, error: iErr } = await supabase
+  const { data: images, error: iErr } = await supabaseBrowser
     .from("product_images")
     .select("id, product_id, path, alt, sort_order")
     .order("product_id", { ascending: true })
@@ -83,7 +84,7 @@ async function addImage(formData: FormData) {
   if (error) throw error;
 
   // Find slug to revalidate its detail page
-  const { data: prod } = await supabase.from("products").select("slug").eq("id", product_id).single();
+  const { data: prod } = await supabaseBrowser.from("products").select("slug").eq("id", product_id).single();
   revalidatePath("/products");
   if (prod?.slug) revalidatePath(`/products/${prod.slug}`);
 }
@@ -94,7 +95,7 @@ async function deleteProduct(formData: FormData) {
   if (!id) throw new Error("id required");
 
   // get slug first for revalidate
-  const { data: prod } = await supabase.from("products").select("slug").eq("id", id).single();
+  const { data: prod } = await supabaseBrowser.from("products").select("slug").eq("id", id).single();
 
   const { error } = await supabaseAdmin.from("products").delete().eq("id", id);
   if (error) throw error;

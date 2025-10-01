@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 export const revalidate = 60;
 
@@ -13,7 +13,7 @@ type ProductRow = {
 };
 
 async function getProducts(): Promise<ProductRow[]> {
-  const { data: products, error } = await supabase
+  const { data: products, error } = await supabaseAdmin
     .from("products")
     .select(`
       id, slug, title, summary, lead_price,

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { supabase } from "@/lib/supabase";
+import { supabaseBrowser } from "@/lib/supabase-browser";
 import LightboxClient from "./lightbox-client";
 
 export const revalidate = 60;
@@ -26,12 +26,12 @@ const BUCKET = process.env.SUPABASE_STORAGE_BUCKET_PRODUCTS || "products";
 function publicUrl(path?: string | null) {
   if (!path) return undefined;
   const clean = path.replace(/^\/+/, "").replace(/^Products\/+/, '');
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(clean);
+  const { data } = supabaseBrowser.storage.from(BUCKET).getPublicUrl(clean);
   return data.publicUrl;
 }
 
 async function getProducts(slug: string) {
-  const { data: product, error } = await supabase
+  const { data: product, error } = await supabaseBrowser
     .from("products")
     .select(`
       id, slug, title, summary, lead_price,
@@ -46,7 +46,7 @@ async function getProducts(slug: string) {
 
 /** Static generation for each product */
 export async function generateStaticParams() {
-  const {data, error } = await supabase.from("products").select("slug");
+  const {data, error } = await supabaseBrowser.from("products").select("slug");
   if (error || !data) return [];
   return (data ?? []).map((p:{slug: string}) => ({ slug: p.slug }));
 }

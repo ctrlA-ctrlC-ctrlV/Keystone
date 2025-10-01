@@ -36,6 +36,6 @@ export async function generateUniqueQuoteId (
         }
     }
 
-    // if somehow collided repeatedly, let the DB UNIQUE constraint enforce it.
+    // if somehow collided repeatedly, let the DB UNIQUE constraint enforce it. 
     return newQuoteId();
 }
